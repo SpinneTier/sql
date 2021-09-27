@@ -1,0 +1,77 @@
+CREATE TABLE public.emotion
+(
+ id integer NOT NULL DEFAULT nextval('"Emotion_id_seq"'::regclass),
+15
+ parent_id integer,
+ emot_name character varying(25) COLLATE pg_catalog."default" NOT NULL,
+ CONSTRAINT "Emotion_pkey" PRIMARY KEY (id),
+ CONSTRAINT "Emotion_parent_id_fkey" FOREIGN KEY (parent_id)
+ REFERENCES public.emotion (id) MATCH SIMPLE
+ ON UPDATE NO ACTION
+ ON DELETE NO ACTION
+)
+TABLESPACE pg_default;
+ALTER TABLE public.emotion
+ OWNER to postgres;
+ 
+ 
+CREATE TABLE public.experiment
+(
+ id integer NOT NULL,
+ product_id integer NOT NULL,
+ exp_date date,
+ CONSTRAINT experiment_pkey PRIMARY KEY (id)
+)
+TABLESPACE pg_default;
+ALTER TABLE public.experiment
+ OWNER to postgres; 
+ 
+ 
+CREATE TABLE public.people
+(
+ id integer NOT NULL,
+ age integer,
+ sex integer,
+ CONSTRAINT "People_pkey" PRIMARY KEY (id)
+)
+TABLESPACE pg_default;
+ALTER TABLE public.people
+ OWNER to postgres; 
+
+
+CREATE TABLE public.photolink
+(
+ id integer NOT NULL DEFAULT nextval('"PhotoLink_id_seq"'::regclass),
+ emot_id integer NOT NULL,
+ address character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+ person integer,
+ experiment integer,
+ CONSTRAINT "PhotoLink_pkey" PRIMARY KEY (id),
+ CONSTRAINT "PhotoLink_emot_id_fkey" FOREIGN KEY (emot_id)
+ REFERENCES public.emotion (id) MATCH SIMPLE
+ ON UPDATE NO ACTION
+ ON DELETE NO ACTION,
+ CONSTRAINT photolink_experiment_fkey FOREIGN KEY (experiment)
+ REFERENCES public.experiment (id) MATCH SIMPLE
+ ON UPDATE NO ACTION
+ ON DELETE NO ACTION
+ NOT VALID,
+ CONSTRAINT photolink_person_fkey FOREIGN KEY (person)
+ REFERENCES public.people (id) MATCH SIMPLE
+ ON UPDATE NO ACTION
+ ON DELETE NO ACTION
+ NOT VALID
+)
+TABLESPACE pg_default;
+ALTER TABLE public.photolink
+ OWNER to postgres; 
+ 
+CREATE TABLE public.product
+(
+ id integer NOT NULL,
+ name character varying(25) COLLATE pg_catalog."default" NOT NULL,
+ CONSTRAINT product_pkey PRIMARY KEY (id)
+)
+TABLESPACE pg_default;
+ALTER TABLE public.product
+ OWNER to postgres;
